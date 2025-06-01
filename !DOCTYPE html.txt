@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vòng quay may mắn nội bộ</title>
+  <style>
+    body { text-align: center; font-family: Arial; }
+    #result { font-size: 2em; margin-top: 20px; }
+    button { padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Vòng quay may mắn</h1>
+  <p>Tổng lượt quay: <span id="turnsLeft">29</span></p>
+  <button onclick="spinWheel()">Quay!</button>
+  <div id="result">🎁 Kết quả sẽ hiển thị ở đây</div>
+
+  <script>
+    let totalSpins = 29;
+    let spinsLeft = totalSpins;
+
+    // Danh sách phần thưởng tương ứng với xác suất mong muốn
+    // 2 lần 500k, 6 lần 200k, 21 lần 100k => tạo một mảng chứa đúng số lần xuất hiện
+    const prizePool = [
+      ...Array(2).fill("500.000 VNĐ"),
+      ...Array(6).fill("200.000 VNĐ"),
+      ...Array(21).fill("100.000 VNĐ")
+    ];
+
+    // Trộn ngẫu nhiên thứ tự phần thưởng để quay mỗi lần ra 1 phần tử trong danh sách này
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    let shuffledPrizes = shuffle([...prizePool]);
+
+    function spinWheel() {
+      if (spinsLeft <= 0) {
+        document.getElementById("result").innerText = "🎉 Đã quay đủ 29 lần!";
+        return;
+      }
+      const currentPrize = shuffledPrizes[totalSpins - spinsLeft];
+      document.getElementById("result").innerText = `🎁 Bạn nhận được: ${currentPrize}`;
+      spinsLeft--;
+      document.getElementById("turnsLeft").innerText = spinsLeft;
+    }
+  </script>
+</body>
+</html>
