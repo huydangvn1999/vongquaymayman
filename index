@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vòng Quay May Mắn</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #fceabb, #f8b500);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #fff;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    #pointer {
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 40px solid red;
+      margin-bottom: -10px;
+      z-index: 10;
+      position: relative;
+    }
+
+    #wheel {
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      border: 10px solid #fff;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      background: conic-gradient(
+        #FFD700 0deg 60deg,
+        #FFA500 60deg 160deg,
+        #32CD32 160deg 360deg
+      );
+      transition: transform 4s ease-out;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: crimson;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    button:hover {
+      background-color: #b30000;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #222;
+      background: #fff6e0;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .counter {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #fff;
+      text-shadow: 1px 1px 2px #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vòng Quay May Mắn 🎉</h1>
+  <div id="pointer"></div>
+  <div id="wheel"></div>
+  <div class="counter">Lặt quay còn lại: <span id="spinsLeft">29</span></div>
+  <button onclick="spin()">QUAY NGAY</button>
+  <div id="result">🎁 Kết quả sẽ hiển thị tại đây</div>
+
+  <script>
+    let spinsLeft = 29;
+    const resultBox = document.getElementById('result');
+    const spinsLeftBox = document.getElementById('spinsLeft');
+    const wheel = document.getElementById('wheel');
+
+    const prizeOrder = [
+      "500.000 VNĐ", "500.000 VNĐ",
+      "200.000 VNĐ", "200.000 VNĐ", "200.000 VNĐ",
+      "200.000 VNĐ", "200.000 VNĐ", "200.000 VNĐ",
+      ...Array(21).fill("100.000 VNĐ")
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    shuffle(prizeOrder);
+
+    function spin() {
+      if (spinsLeft <= 0) {
+        resultBox.innerText = "🎉 Đã quay hết 29 lượt!";
+        return;
+      }
+
+      const prize = prizeOrder[29 - spinsLeft];
+      let angle;
+
+      if (prize === "500.000 VNĐ") angle = 30;
+      else if (prize === "200.000 VNĐ") angle = 110;
+      else angle = 270;
+
+      const rotateDeg = 360 * 5 + angle + Math.floor(Math.random() * 10 - 5);
+      wheel.style.transition = "transform 4s ease-out";
+      wheel.style.transform = `rotate(${rotateDeg}deg)`;
+
+      setTimeout(() => {
+        resultBox.innerText = `🎁 Bạn nhận được: ${prize}`;
+        spinsLeft--;
+        spinsLeftBox.innerText = spinsLeft;
+      }, 4200);
+    }
+  </script>
+</body>
+</html>
